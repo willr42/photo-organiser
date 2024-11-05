@@ -5,6 +5,7 @@ import fs from "node:fs/promises"
 import path from "node:path"
 import os from "node:os"
 import sharp from "sharp"
+import { metadata } from "./layout"
 
 const photosEnv = process.env.PHOTOS_ROOT_DIR
 const photosWorkingDir = await fs.mkdtemp(path.join(os.tmpdir(), "photoorg"))
@@ -64,12 +65,12 @@ export default async function Home() {
     })
     // For each file/folder
     for (const element of dirContents) {
-      if (element.isDirectory()) {
-        // Get path
-        const elementPath = path.parse(
-          path.join(element.parentPath, element.name),
-        )
+      // Get path
+      const elementPath = path.parse(
+        path.join(element.parentPath, element.name),
+      )
 
+      if (element.isDirectory()) {
         // Make relative to root dir
         const relativeFromRootPath = path.join(
           elementPath.dir.replace(path.format(photosRootParsedPath), ""),
@@ -82,8 +83,26 @@ export default async function Home() {
         // // Create in temp dir
         await fs.mkdir(inTmpDirPath, { recursive: true })
       } else {
-        // console.log(path.resolve(element.parentPath, element.name))
-        // sharp(element.parentPath)
+        // Make relative to root dir
+        const relativeFromRootPath = path.join(
+          elementPath.dir.replace(path.format(photosRootParsedPath), ""),
+          elementPath.name,
+        )
+
+        const inTmpDirPath = path.join(photosWorkingDir, relativeFromRootPath)
+
+        sharp(path.format(elementPath))
+          .metadata()
+          .then((metadata) => {
+            return sharp(path.format(elementPath))
+              .resize({
+                width: Math.floor(metadata.width ? metadata.width / 2 : 1000),
+                fit: sharp.fit.contain,
+              })
+              .toFormat("jpg")
+              .toFile(inTmpDirPath)
+              .catch((err) => console.error("sharp error: ", err))
+          })
       }
     }
   } catch (error) {
