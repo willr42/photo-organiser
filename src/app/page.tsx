@@ -17,9 +17,8 @@ export default async function Home() {
           </AlertTitle>
           <AlertDescription>
             Please set a{" "}
-            <code className="rounded-md bg-gray-100 p-1">PHOTOS_ROOT_DIR</code>{" "}
-            in your .env file
-            <br></br> and restart the NextJS server.
+            <code className="rounded-md bg-gray-100 p-1">PHOTOS_ROOT_DIR</code>
+            in your .env file <br /> and restart the NextJS server.
           </AlertDescription>
           <RefreshButton />
         </Alert>
@@ -46,8 +45,7 @@ export default async function Home() {
           <AlertDescription>
             We could not access the
             <code className="rounded-md bg-gray-100 p-1">PHOTOS_ROOT_DIR</code>.
-            Please check the path
-            <br></br> and restart the NextJS server.
+            Please check the path <br /> and restart the NextJS server.
           </AlertDescription>
           <RefreshButton />
         </Alert>
