@@ -5,7 +5,6 @@ import fs from "node:fs/promises"
 import path from "node:path"
 import os from "node:os"
 import sharp from "sharp"
-import { metadata } from "./layout"
 
 const photosEnv = process.env.PHOTOS_ROOT_DIR
 const photosWorkingDir = await fs.mkdtemp(path.join(os.tmpdir(), "photoorg"))
@@ -111,7 +110,7 @@ export default async function Home() {
 
   return (
     <main>
-      <div>{JSON.stringify(photosRootParsedPath)}</div>
+      <div>Files written to {photosWorkingDir}</div>
     </main>
   )
 }
