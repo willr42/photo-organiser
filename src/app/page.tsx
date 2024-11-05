@@ -3,8 +3,10 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { CircleX } from "lucide-react"
 import fs from "node:fs/promises"
 import path from "node:path"
+import os from "node:os"
 
 const photosEnv = process.env.PHOTOS_ROOT_DIR
+const photosWorkingDir = await fs.mkdtemp(path.join(os.tmpdir(), "photoorg"))
 
 export default async function Home() {
   if (!photosEnv) {
@@ -51,6 +53,36 @@ export default async function Home() {
         </Alert>
       </main>
     )
+  }
+
+  try {
+    // Get dir content
+    const dirContents = await fs.readdir(path.format(photosRootParsedPath), {
+      withFileTypes: true,
+      recursive: true,
+    })
+    // For each file/folder
+    for (const element of dirContents) {
+      if (element.isDirectory()) {
+        // Get path
+        const elementPath = path.parse(
+          path.join(element.parentPath, element.name),
+        )
+
+        // Make relative to root dir
+        const relativeFromRootPath = elementPath.dir
+          .replace(path.format(photosRootParsedPath), "")
+          .concat("/", elementPath.name)
+
+        // Make the tmp version
+        const inTmpDirPath = photosWorkingDir + relativeFromRootPath
+
+        // Create in temp dir
+        await fs.mkdir(inTmpDirPath)
+      }
+    }
+  } catch (error) {
+    console.error(error)
   }
 
   return (
