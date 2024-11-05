@@ -4,6 +4,7 @@ import { CircleX } from "lucide-react"
 import fs from "node:fs/promises"
 import path from "node:path"
 import os from "node:os"
+import sharp from "sharp"
 
 const photosEnv = process.env.PHOTOS_ROOT_DIR
 const photosWorkingDir = await fs.mkdtemp(path.join(os.tmpdir(), "photoorg"))
@@ -70,15 +71,19 @@ export default async function Home() {
         )
 
         // Make relative to root dir
-        const relativeFromRootPath = elementPath.dir
-          .replace(path.format(photosRootParsedPath), "")
-          .concat("/", elementPath.name)
+        const relativeFromRootPath = path.join(
+          elementPath.dir.replace(path.format(photosRootParsedPath), ""),
+          elementPath.name,
+        )
 
         // Make the tmp version
-        const inTmpDirPath = photosWorkingDir + relativeFromRootPath
+        const inTmpDirPath = path.join(photosWorkingDir, relativeFromRootPath)
 
-        // Create in temp dir
-        await fs.mkdir(inTmpDirPath)
+        // // Create in temp dir
+        await fs.mkdir(inTmpDirPath, { recursive: true })
+      } else {
+        // console.log(path.resolve(element.parentPath, element.name))
+        // sharp(element.parentPath)
       }
     }
   } catch (error) {
