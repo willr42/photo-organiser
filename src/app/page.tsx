@@ -1,10 +1,11 @@
 import RefreshButton from "@/components/elements/RefreshButton"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { CircleX } from "lucide-react"
+import { CircleX, Folder } from "lucide-react"
 import fs from "node:fs/promises"
 import path from "node:path"
 import os from "node:os"
 import sharp from "sharp"
+import Link from "next/link"
 
 const photosEnv = process.env.PHOTOS_ROOT_DIR
 const photosWorkingDir = await fs.mkdtemp(path.join(os.tmpdir(), "photoorg"))
@@ -107,10 +108,28 @@ export default async function Home() {
   } catch (error) {
     console.error(error)
   }
+  const tmpDirContents = await fs.readdir(photosWorkingDir, {
+    withFileTypes: true,
+  })
 
   return (
-    <main>
+    <main className="min-h-screen">
       <div>Files written to {photosWorkingDir}</div>
+      <div className="my-10 flex flex-col items-center">
+        <h1 className="mb-4 text-lg font-bold">Pick a file or folder</h1>
+        <div className="grid w-3/4 grid-cols-4 gap-4">
+          {tmpDirContents.map((dirOrFile) => (
+            <Link
+              key={dirOrFile.name}
+              href={dirOrFile.name}
+              className="rounded-md bg-gray-100 p-2"
+            >
+              {dirOrFile.isDirectory() && <Folder size={64} />}
+              {dirOrFile.name}
+            </Link>
+          ))}
+        </div>
+      </div>
     </main>
   )
 }
