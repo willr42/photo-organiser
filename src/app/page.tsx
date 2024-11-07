@@ -8,7 +8,7 @@ import sharp from "sharp"
 import Link from "next/link"
 
 const photosEnv = process.env.PHOTOS_ROOT_DIR
-const photosWorkingDir = await fs.mkdtemp(path.join(os.tmpdir(), "photoorg"))
+export const WORKING_DIR = await fs.mkdtemp(path.join(os.tmpdir(), "photoorg"))
 
 export default async function Home() {
   if (!photosEnv) {
@@ -78,7 +78,7 @@ export default async function Home() {
         )
 
         // Make the tmp version
-        const inTmpDirPath = path.join(photosWorkingDir, relativeFromRootPath)
+        const inTmpDirPath = path.join(WORKING_DIR, relativeFromRootPath)
 
         // // Create in temp dir
         await fs.mkdir(inTmpDirPath, { recursive: true })
@@ -89,7 +89,7 @@ export default async function Home() {
           elementPath.name,
         )
 
-        const inTmpDirPath = path.join(photosWorkingDir, relativeFromRootPath)
+        const inTmpDirPath = path.join(WORKING_DIR, relativeFromRootPath)
 
         sharp(path.format(elementPath))
           .metadata()
@@ -108,13 +108,13 @@ export default async function Home() {
   } catch (error) {
     console.error(error)
   }
-  const tmpDirContents = await fs.readdir(photosWorkingDir, {
+  const tmpDirContents = await fs.readdir(WORKING_DIR, {
     withFileTypes: true,
   })
 
   return (
     <main className="min-h-screen">
-      <div>Files written to {photosWorkingDir}</div>
+      <div>Files written to {WORKING_DIR}</div>
       <div className="my-10 flex flex-col items-center">
         <h1 className="mb-4 text-lg font-bold">Pick a file or folder</h1>
         <div className="grid w-3/4 grid-cols-4 gap-4">
