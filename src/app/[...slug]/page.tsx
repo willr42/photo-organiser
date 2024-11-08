@@ -1,6 +1,7 @@
 import fs from "node:fs/promises"
 import path from "node:path"
 import { WORKING_DIR } from "../page"
+import { FileGrid } from "@/components/elements/FileGrid"
 
 export default async function Page({ params }: { params: { slug: string[] } }) {
   const { slug } = await params
@@ -10,5 +11,9 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
     recursive: true,
   })
 
-  return <div>{JSON.stringify(dirContents)}</div>
+  return (
+    <div className="flex flex-col p-6">
+      <FileGrid contents={dirContents} />
+    </div>
+  )
 }

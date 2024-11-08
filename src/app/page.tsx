@@ -1,13 +1,14 @@
 import RefreshButton from "@/components/elements/RefreshButton"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { CircleX, Folder } from "lucide-react"
+import { CircleX } from "lucide-react"
 import fs from "node:fs/promises"
 import path from "node:path"
 import os from "node:os"
 import sharp from "sharp"
-import Link from "next/link"
+import { FileGrid } from "@/components/elements/FileGrid"
 
 const photosEnv = process.env.PHOTOS_ROOT_DIR
+export const photosRootParsedPath = path.parse(photosEnv as string)
 export const WORKING_DIR = await fs.mkdtemp(path.join(os.tmpdir(), "photoorg"))
 
 export default async function Home() {
@@ -30,7 +31,6 @@ export default async function Home() {
     )
   }
 
-  const photosRootParsedPath = path.parse(photosEnv as string)
   try {
     // Descriptive var name
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -117,17 +117,8 @@ export default async function Home() {
       <div>Files written to {WORKING_DIR}</div>
       <div className="my-10 flex flex-col items-center">
         <h1 className="mb-4 text-lg font-bold">Pick a file or folder</h1>
-        <div className="grid w-3/4 grid-cols-4 gap-4">
-          {tmpDirContents.map((dirOrFile) => (
-            <Link
-              key={dirOrFile.name}
-              href={dirOrFile.name}
-              className="rounded-md bg-gray-100 p-2"
-            >
-              {dirOrFile.isDirectory() && <Folder size={64} />}
-              {dirOrFile.name}
-            </Link>
-          ))}
+        <div className="flex">
+          <FileGrid contents={tmpDirContents} />
         </div>
       </div>
     </main>
