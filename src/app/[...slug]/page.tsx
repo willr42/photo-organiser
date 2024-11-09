@@ -11,7 +11,6 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
     const isFile = stats.isFile()
 
     if (isFile) {
-      console.log("requesting path: ", path.format(currentPath))
       return (
         <div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
