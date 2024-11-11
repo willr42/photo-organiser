@@ -100,6 +100,12 @@ export default async function Home() {
                 fit: sharp.fit.contain,
               })
               .toFormat("jpg")
+              .withExif({
+                IFD0: {
+                  DateTime: "2024:01:01",
+                  DateTimeOriginal: "2024:01:01",
+                },
+              })
               .toFile(inTmpDirPath)
               .catch((err) => console.error("sharp error: ", err))
           })
