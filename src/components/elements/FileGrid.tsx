@@ -1,4 +1,4 @@
-import { WORKING_DIR } from "@/app/page"
+import { WORKING_DIR_PATH } from "@/app/page"
 import { Folder } from "lucide-react"
 import Link from "next/link"
 import { Dirent } from "node:fs"
@@ -20,7 +20,7 @@ export function FileGrid({ contents }: { contents: Dirent[] }) {
     <div className="grid grid-cols-4 gap-4">
       {contentsNoDupes.map((dirent) => {
         const relativeFromRootPath = path.join(
-          dirent.parentPath.replace(WORKING_DIR, ""),
+          dirent.parentPath.replace(WORKING_DIR_PATH, ""),
           dirent.name,
         )
         return (

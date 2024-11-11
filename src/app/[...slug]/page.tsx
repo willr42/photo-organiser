@@ -1,11 +1,11 @@
 import fs from "node:fs/promises"
 import path from "node:path"
-import { WORKING_DIR } from "../page"
+import { WORKING_DIR_PATH } from "../page"
 import { FileGrid } from "@/components/elements/FileGrid"
 
 export default async function Page({ params }: { params: { slug: string[] } }) {
   const { slug } = await params
-  const currentPath = path.parse(path.join(WORKING_DIR, ...slug))
+  const currentPath = path.parse(path.join(WORKING_DIR_PATH, ...slug))
   const DisplayElement = async () => {
     const stats = await fs.stat(path.format(currentPath))
     const isFile = stats.isFile()
@@ -24,7 +24,6 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
     if (isDir) {
       const dirContents = await fs.readdir(path.format(currentPath), {
         withFileTypes: true,
-        recursive: true,
       })
       return <FileGrid contents={dirContents} />
     }
