@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Button } from "@/components/ui/button"
 
 type Props = {
   front: string
@@ -10,11 +11,15 @@ type Props = {
 export function PhotoDisplay({ front, back }: Props) {
   const [activePhoto, setActivePhoto] = useState(front)
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       {back && (
-        <div>
-          <button onClick={() => setActivePhoto(back)}>Back</button>
-          <button onClick={() => setActivePhoto(front)}>Front</button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setActivePhoto(back)}>
+            Back
+          </Button>
+          <Button variant="outline" onClick={() => setActivePhoto(front)}>
+            Front
+          </Button>
         </div>
       )}
       {/* eslint-disable-next-line @next/next/no-img-element */}
