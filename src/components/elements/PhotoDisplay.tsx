@@ -7,10 +7,9 @@ import { MetadataForm } from "./MetadataForm"
 type Props = {
   front: string
   back: string | false
-  metadata?: string
 }
 
-export function PhotoDisplay({ front, back, metadata }: Props) {
+export function PhotoDisplay({ front, back }: Props) {
   const [activePhoto, setActivePhoto] = useState(front)
   const filename = front.split("/").pop()
   return (
