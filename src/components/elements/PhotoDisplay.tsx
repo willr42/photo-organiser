@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { MetadataForm } from "./MetadataForm"
 
 type Props = {
   front: string
@@ -41,7 +42,7 @@ export function PhotoDisplay({ front, back, metadata }: Props) {
       </div>
       <div>
         <h2 className="text-2xl font-semibold">Metadata</h2>
-        <code>{metadata}</code>
+        <MetadataForm />
       </div>
     </main>
   )
