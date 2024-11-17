@@ -13,7 +13,7 @@ export function PhotoDisplay({ front, back, metadata }: Props) {
   const [activePhoto, setActivePhoto] = useState(front)
   const filename = front.split("/").pop()
   return (
-    <main className="grid grid-cols-2">
+    <main className="grid grid-cols-2 gap-4">
       <div className="flex flex-col gap-4">
         <h1 className="text-2xl font-semibold">Image display</h1>
         {back && (
@@ -28,7 +28,11 @@ export function PhotoDisplay({ front, back, metadata }: Props) {
         )}
         <figure>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={`/api${activePhoto}`} alt="Image" className="max-w-96" />
+          <img
+            src={`/api${activePhoto}`}
+            alt="Image"
+            className="min-h-[500px] w-full max-w-96 bg-gray-100"
+          />
           <figcaption className="mt-2 flex flex-col">
             <span className="text-lg font-semibold">Path</span>
             {filename}
