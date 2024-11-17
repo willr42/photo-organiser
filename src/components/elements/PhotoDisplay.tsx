@@ -26,8 +26,8 @@ export function PhotoDisplay({ front, back, metadata }: Props) {
             </Button>
           </div>
         )}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <figure>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={`/api${activePhoto}`} alt="Image" className="max-w-96" />
           <figcaption className="mt-2 flex flex-col">
             <span className="text-lg font-semibold">Path</span>
