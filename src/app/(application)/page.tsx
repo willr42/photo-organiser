@@ -6,6 +6,7 @@ import path from "node:path"
 import os from "node:os"
 import sharp from "sharp"
 import { FileGrid } from "@/components/elements/FileGrid"
+import { dir } from "node:console"
 
 const photosEnv = process.env.PHOTOS_ROOT_DIR
 export const photosRootParsedPath = path.parse(photosEnv as string)
@@ -122,9 +123,11 @@ export default async function Home() {
   } catch (error) {
     console.error(error)
   }
-  const tmpDirContents = await fs.readdir(WORKING_DIR_PATH, {
-    withFileTypes: true,
-  })
+  const tmpDirContents = (
+    await fs.readdir(WORKING_DIR_PATH, {
+      withFileTypes: true,
+    })
+  ).filter((dirent) => dirent.name !== ".DS_Store")
 
   return (
     <main>
