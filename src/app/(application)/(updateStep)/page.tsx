@@ -6,7 +6,6 @@ import path from "node:path"
 import os from "node:os"
 import sharp from "sharp"
 import { FileGrid } from "@/components/elements/FileGrid"
-import { dir } from "node:console"
 
 const photosEnv = process.env.PHOTOS_ROOT_DIR
 export const photosRootParsedPath = path.parse(photosEnv as string)
