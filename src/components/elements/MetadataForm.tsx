@@ -1,36 +1,44 @@
 "use client"
 
 import { useForm } from "react-hook-form"
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form"
-import { Input } from "../ui/input"
+import { Form, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
+import { Button } from "../ui/button"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import { Calendar } from "../ui/calendar"
 
 export function MetadataForm() {
-  const form = useForm()
+  const schema = z.object({
+    date: z.date({ required_error: "this is required" }),
+  })
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+  })
+
+  function onSubmit(data: z.infer<typeof schema>) {
+    console.log(data)
+  }
 
   return (
     <Form {...form}>
-      <FormField
-        control={form.control}
-        name="date"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Date taken</FormLabel>
-            <FormControl>
-              <Input placeholder="01.01.2024" {...field} />
-            </FormControl>
-            <FormDescription>The date the image was taken.</FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="date"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-lg">Date taken</FormLabel>
+              <Calendar
+                mode="single"
+                selected={field.value}
+                onSelect={field.onChange}
+              />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button>Submit</Button>
+      </form>
     </Form>
   )
 }
