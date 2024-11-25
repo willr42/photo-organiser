@@ -1,44 +1,67 @@
 "use client"
 
-import { useForm } from "react-hook-form"
-import { Form, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
-import { Button } from "../ui/button"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { Calendar } from "../ui/calendar"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { updateMetadata } from "./useMetadata"
+import { MetadataFormSchema, metadataFrontendSchema } from "./metadataSchema"
+import { useState } from "react"
 
 export function MetadataForm() {
-  const schema = z.object({
-    date: z.date({ required_error: "this is required" }),
-  })
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  const [formResult, setFormResult] = useState(false)
+  const form = useForm<MetadataFormSchema>({
+    resolver: zodResolver(metadataFrontendSchema),
   })
 
-  function onSubmit(data: z.infer<typeof schema>) {
-    console.log(data)
+  const onSubmit: SubmitHandler<MetadataFormSchema> = async (data) => {
+    const formData = new FormData()
+    formData.append("date", data.date.toISOString())
+
+    const result = await updateMetadata(formData)
+
+    if (!result.success) {
+      form.setError("date", {
+        type: "server",
+        message: result.error?.message,
+      })
+    }
+
+    setFormResult(result.success)
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <FormField
-          control={form.control}
-          name="date"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-lg">Date taken</FormLabel>
-              <Calendar
-                mode="single"
-                selected={field.value}
-                onSelect={field.onChange}
-              />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button>Submit</Button>
-      </form>
-    </Form>
+    <>
+      {!formResult && (
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-lg">Date taken</FormLabel>
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button>Submit</Button>
+          </form>
+        </Form>
+      )}
+      <div>{formResult && <p>Form submitted!</p>}</div>
+    </>
   )
 }
