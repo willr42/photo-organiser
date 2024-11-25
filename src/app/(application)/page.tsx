@@ -19,7 +19,7 @@ try {
 export default async function Home() {
   if (!photosEnv) {
     return (
-      <main className="flex h-screen items-center justify-center">
+      <main className="flex items-center justify-center">
         <Alert className="w-fit text-red-700">
           <CircleX className="size-4 stroke-red-700" />
           <AlertTitle className="font-bold">
@@ -45,7 +45,7 @@ export default async function Home() {
     )
   } catch {
     return (
-      <main className="flex h-screen items-center justify-center">
+      <main className="flex items-center justify-center">
         <Alert className="w-fit text-red-700">
           <CircleX className="size-4 stroke-red-700" />
           <AlertTitle className="font-bold">
@@ -94,7 +94,10 @@ export default async function Home() {
           elementPath.name,
         )
 
-        const inTmpDirPath = path.join(WORKING_DIR_PATH, relativeFromRootPath)
+        const inTmpDirPath = path.join(
+          WORKING_DIR_PATH,
+          relativeFromRootPath + ".jpg",
+        )
 
         sharp(path.format(elementPath))
           .metadata()
@@ -124,7 +127,7 @@ export default async function Home() {
   })
 
   return (
-    <main className="min-h-screen">
+    <main>
       <div>Files written to {WORKING_DIR_PATH}</div>
       <div className="my-10 flex flex-col items-center">
         <h1 className="mb-4 text-lg font-bold">Pick a file or folder</h1>
