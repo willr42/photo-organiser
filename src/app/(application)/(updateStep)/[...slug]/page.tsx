@@ -20,8 +20,7 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
         photoHasBack = backStat.isFile()
       } catch (err) {
         if (err instanceof Error && "code" in err) {
-          const fsErr = err as NodeJS.ErrnoException
-          console.error("File not found", fsErr)
+          console.log("No back image found")
         } else {
           throw err
         }
