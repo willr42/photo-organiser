@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { MetadataForm } from "./MetadataForm"
 
@@ -12,7 +11,6 @@ type Props = {
 
 export function PhotoDisplay({ front, back }: Props) {
   const [activePhoto, setActivePhoto] = useState(front)
-  const router = useRouter()
   const filename = front.split("/").pop()
 
   return (
@@ -57,10 +55,6 @@ export function PhotoDisplay({ front, back }: Props) {
           <h2 className="text-2xl font-semibold">Metadata</h2>
           <MetadataForm />
         </div>
-
-        <nav className="mt-12">
-          <Button onClick={router.back}>Back</Button>
-        </nav>
       </div>
     </main>
   )

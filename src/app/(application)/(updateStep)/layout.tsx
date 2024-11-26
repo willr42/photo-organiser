@@ -1,3 +1,4 @@
+import { BackButton } from "@/components/elements/BackButton"
 import { Stepper } from "@/components/elements/Stepper/Stepper"
 import { buttonVariants } from "@/components/ui/button"
 import { ArrowBigRightDash } from "lucide-react"
@@ -16,11 +17,12 @@ export default function AppLayout({
 }>) {
   return (
     <div>
-      <nav>
+      <div>
         <Stepper steps={appSteps} />
-      </nav>
+      </div>
       {children}
-      <div className="mr-20 text-right">
+      <div className="mr-20 flex justify-end gap-2">
+        <BackButton />
         <Link className={buttonVariants({ variant: "outline" })} href="/apply">
           Apply
           <ArrowBigRightDash />
