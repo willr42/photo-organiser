@@ -94,10 +94,7 @@ export default async function Home() {
           elementPath.name,
         )
 
-        const inTmpDirPath = path.join(
-          WORKING_DIR_PATH,
-          relativeFromRootPath + ".jpg",
-        )
+        const inTmpDirPath = path.join(WORKING_DIR_PATH, relativeFromRootPath)
 
         sharp(path.format(elementPath))
           .metadata()

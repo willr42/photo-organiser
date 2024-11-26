@@ -10,7 +10,7 @@ export function FileGrid({ contents }: { contents: Dirent[] }) {
     .map((dirent) => {
       if (!dirent.isFile()) return dirent
       const isSupplemental =
-        dirent.name.endsWith("_a.jpg") || dirent.name.endsWith("_b.jpg")
+        dirent.name.endsWith("_a") || dirent.name.endsWith("_b")
       if (isSupplemental) return undefined
       return dirent
     })
