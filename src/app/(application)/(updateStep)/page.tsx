@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"
+
 import RefreshButton from "@/components/elements/RefreshButton"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { CircleX } from "lucide-react"
