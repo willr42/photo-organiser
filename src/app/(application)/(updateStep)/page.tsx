@@ -122,11 +122,9 @@ export default async function Home() {
   } catch (error) {
     console.error(error)
   }
-  const tmpDirContents = (
-    await fs.readdir(WORKING_DIR_PATH, {
-      withFileTypes: true,
-    })
-  ).filter((dirent) => dirent.name !== ".DS_Store")
+  const tmpDirContents = await fs.readdir(WORKING_DIR_PATH, {
+    withFileTypes: true,
+  })
 
   return (
     <main>

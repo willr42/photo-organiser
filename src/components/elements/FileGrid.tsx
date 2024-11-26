@@ -14,7 +14,9 @@ export function FileGrid({ contents }: { contents: Dirent[] }) {
       if (isSupplemental) return undefined
       return dirent
     })
-    .filter((dirent) => !!dirent)
+    .filter(
+      (dirent): dirent is Dirent => !!dirent && dirent.name !== ".DS_Store",
+    )
 
   return (
     <div className="grid grid-cols-4 gap-4">
