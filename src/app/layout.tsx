@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import "./globals.css"
+import { MetadataProvider } from "@/lib/providers"
 
 export const metadata: Metadata = {
   title: "Photo Organiser",
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <MetadataProvider>{children}</MetadataProvider>
+      </body>
     </html>
   )
 }

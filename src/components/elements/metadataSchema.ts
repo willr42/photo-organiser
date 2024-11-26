@@ -2,10 +2,7 @@ import { z } from "zod"
 
 export const metadataFrontendSchema = z.object({
   date: z.date(),
-})
-
-export const metadataBackendSchema = z.object({
-  date: z.string().datetime(),
+  path: z.string(),
 })
 
 export type MetadataFormSchema = z.infer<typeof metadataFrontendSchema>

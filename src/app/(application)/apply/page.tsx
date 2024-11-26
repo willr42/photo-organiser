@@ -1,7 +1,10 @@
-export default function ApplyPage() {
+import { ApplyDisplay } from "@/components/elements/ApplyDisplay"
+import { WORKING_DIR_PATH } from "../(updateStep)/page"
+
+export default async function ApplyPage() {
   return (
     <div>
-      <h1>Apply</h1>
+      <ApplyDisplay workingDir={WORKING_DIR_PATH} />
     </div>
   )
 }

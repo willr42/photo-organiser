@@ -11,30 +11,31 @@ import {
 } from "@/components/ui/form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SubmitHandler, useForm } from "react-hook-form"
-import { updateMetadata } from "./useMetadata"
 import { MetadataFormSchema, metadataFrontendSchema } from "./metadataSchema"
 import { useState } from "react"
+import { useMetadataContext } from "@/lib/providers"
+import { useParams } from "next/navigation"
+import { Input } from "../ui/input"
 
-export function MetadataForm() {
+export function MetadataForm({ path: passedinPath }: { path?: string }) {
   const [formResult, setFormResult] = useState(false)
+  const { updateMetadata } = useMetadataContext()
   const form = useForm<MetadataFormSchema>({
     resolver: zodResolver(metadataFrontendSchema),
   })
 
+  const { slug } = useParams()
+  let path = ""
+  if (slug && Array.isArray(slug)) {
+    path = "/" + slug.join("/")
+  }
+
   const onSubmit: SubmitHandler<MetadataFormSchema> = async (data) => {
-    const formData = new FormData()
-    formData.append("date", data.date.toISOString())
-
-    const result = await updateMetadata(formData)
-
-    if (!result.success) {
-      form.setError("date", {
-        type: "server",
-        message: result.error?.message,
-      })
-    }
-
-    setFormResult(result.success)
+    // Add an extra day in MS
+    const correctedDate = new Date(data.date.getTime() + 86400000)
+    const newMetadata = { [data.path]: correctedDate.toISOString() }
+    updateMetadata(newMetadata)
+    setFormResult(true)
   }
 
   return (
@@ -56,6 +57,12 @@ export function MetadataForm() {
                   <FormMessage />
                 </FormItem>
               )}
+            />
+            <FormField
+              control={form.control}
+              name="path"
+              render={() => <Input className="hidden"></Input>}
+              defaultValue={passedinPath || path}
             />
             <Button>Submit</Button>
           </form>
