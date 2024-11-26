@@ -21,15 +21,25 @@ export function PhotoDisplay({ front, back }: Props) {
         <h1 className="text-2xl font-semibold">Image display</h1>
         {back && (
           <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setActivePhoto(back)}>
+            <Button
+              variant="outline"
+              onClick={() => setActivePhoto(back)}
+              disabled={activePhoto === back}
+              className="select-none"
+            >
               Back
             </Button>
-            <Button variant="outline" onClick={() => setActivePhoto(front)}>
+            <Button
+              variant="outline"
+              onClick={() => setActivePhoto(front)}
+              disabled={activePhoto === front}
+              className="select-none"
+            >
               Front
             </Button>
           </div>
         )}
-        <figure>
+        <figure className="w-fit rounded-md border border-gray-300 p-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`/api${activePhoto}`}
