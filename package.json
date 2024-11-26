@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "npm run create-files && next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "create-files": "node --env-file=.env ./src/createTempDir.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
