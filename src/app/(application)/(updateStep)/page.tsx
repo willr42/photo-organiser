@@ -3,21 +3,12 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { CircleX } from "lucide-react"
 import fs from "node:fs/promises"
 import path from "node:path"
-import os from "node:os"
 import sharp from "sharp"
 import { FileGrid } from "@/components/elements/FileGrid"
-
-const photosEnv = process.env.PHOTOS_ROOT_DIR
-export const photosRootParsedPath = path.parse(photosEnv as string)
-export const WORKING_DIR_PATH = path.join(os.tmpdir(), "photoorg")
-try {
-  await fs.mkdir(WORKING_DIR_PATH, { recursive: true })
-} catch (err) {
-  console.error(err)
-}
+import { photosRootParsedPath, WORKING_DIR_PATH } from "@/lib/setup"
 
 export default async function Home() {
-  if (!photosEnv) {
+  if (!photosRootParsedPath) {
     return (
       <main className="flex items-center justify-center">
         <Alert className="w-fit text-red-700">
@@ -62,13 +53,31 @@ export default async function Home() {
     )
   }
 
+  const tmpDirContents = await createTempFiles()
+
+  return (
+    <main>
+      <div>Files written to {WORKING_DIR_PATH}</div>
+      <div className="my-10 flex flex-col items-center">
+        <h1 className="mb-4 text-lg font-bold">Pick a file or folder</h1>
+        <div className="flex">
+          <FileGrid contents={tmpDirContents} />
+        </div>
+      </div>
+    </main>
+  )
+}
+
+async function createTempFiles() {
   try {
     // Get dir content
     const dirContents = await fs.readdir(path.format(photosRootParsedPath), {
       withFileTypes: true,
       recursive: true,
     })
-    // For each file/folder
+
+    const fileProcessingPromises = []
+
     for (const element of dirContents) {
       // Get path
       const elementPath = path.parse(
@@ -82,10 +91,8 @@ export default async function Home() {
           elementPath.name,
         )
 
-        // Make the tmp version
         const inTmpDirPath = path.join(WORKING_DIR_PATH, relativeFromRootPath)
 
-        // // Create in temp dir
         await fs.mkdir(inTmpDirPath, { recursive: true })
       } else {
         // Make relative to root dir
@@ -93,10 +100,10 @@ export default async function Home() {
           elementPath.dir.replace(path.format(photosRootParsedPath), ""),
           elementPath.name,
         )
-
         const inTmpDirPath = path.join(WORKING_DIR_PATH, relativeFromRootPath)
 
-        sharp(path.format(elementPath))
+        // Collect processing promises
+        const processingPromise = sharp(path.format(elementPath))
           .metadata()
           .then((metadata) => {
             return sharp(path.format(elementPath))
@@ -105,33 +112,33 @@ export default async function Home() {
                 fit: sharp.fit.contain,
               })
               .toFormat("jpg")
-              .withExif({
-                IFD0: {
-                  DateTime: "2024:01:01",
-                  DateTimeOriginal: "2024:01:01",
+              .withMetadata({
+                exif: {
+                  IFD0: {
+                    DateTime: "2024:01:01",
+                    DateTimeOriginal: "2024:01:01",
+                  },
                 },
               })
               .toFile(inTmpDirPath)
-              .catch((err) => console.error("sharp error: ", err))
           })
+          .catch((err) => console.error("sharp error:", err))
+
+        fileProcessingPromises.push(processingPromise)
       }
     }
+
+    // Wait for all file operations
+    await Promise.all(fileProcessingPromises)
+
+    console.log("All files written to temp dir")
   } catch (error) {
-    console.error(error)
+    console.error("Error in createTempFiles:", error)
   }
+
   const tmpDirContents = await fs.readdir(WORKING_DIR_PATH, {
     withFileTypes: true,
   })
 
-  return (
-    <main>
-      <div>Files written to {WORKING_DIR_PATH}</div>
-      <div className="my-10 flex flex-col items-center">
-        <h1 className="mb-4 text-lg font-bold">Pick a file or folder</h1>
-        <div className="flex">
-          <FileGrid contents={tmpDirContents} />
-        </div>
-      </div>
-    </main>
-  )
+  return tmpDirContents
 }

@@ -1,4 +1,4 @@
-import { WORKING_DIR_PATH } from "@/app/(application)/(updateStep)/page"
+import { WORKING_DIR_PATH } from "@/lib/setup"
 import { Folder } from "lucide-react"
 import Link from "next/link"
 import { Dirent } from "node:fs"

@@ -1,10 +1,14 @@
 import fs from "node:fs/promises"
 import path from "node:path"
-import { WORKING_DIR_PATH } from "../page"
 import { FileGrid } from "@/components/elements/FileGrid"
 import { PhotoDisplay } from "@/components/elements/PhotoDisplay"
+import { WORKING_DIR_PATH } from "@/lib/setup"
 
-export default async function Page({ params }: { params: { slug: string[] } }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string[] }>
+}) {
   const { slug } = await params
   const photoFrontPath = path.join(WORKING_DIR_PATH, ...slug)
   const photoBackPath = photoFrontPath + "_b"
