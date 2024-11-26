@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "npm run create-files && next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "node --env-file=.env ./src/createTempDir.mjs && next start",
     "lint": "next lint",
     "create-files": "node --env-file=.env ./src/createTempDir.mjs"
   },
