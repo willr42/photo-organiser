@@ -2,13 +2,16 @@
 
 import { createContext, useContext, useState } from "react"
 
-type MetadataState = {
-  [key: string]: string
+export type MetadataState = {
+  path: string
+  dateStamp: string
+  status: "uploading" | "success" | "error" | null
 }
 
 type MetadataContext = {
-  metadata: MetadataState
+  metadata: MetadataState[]
   updateMetadata: (newMetadata: MetadataState) => void
+  wipeMetadata: (newMetadata: MetadataState[]) => void
 }
 
 const MetadataContext = createContext<MetadataContext | undefined>(undefined)
@@ -18,15 +21,26 @@ export const MetadataProvider = ({
 }: {
   children: React.ReactNode
 }) => {
-  const [metadata, setMetadata] = useState<MetadataState>({})
+  const [metadata, setMetadata] = useState<MetadataState[]>([])
 
   const updateMetadata = (newMetadata: MetadataState) => {
-    setMetadata((prev) => ({ ...prev, ...newMetadata }))
-    // Update local storage here
+    setMetadata((prev) => {
+      const noFormerImage = prev.filter(
+        (image) => image.path !== newMetadata.path,
+      )
+      return [...noFormerImage, newMetadata]
+    })
+    // TODO: update local storage here
+  }
+
+  const wipeMetadata = (newMetadata: MetadataState[]) => {
+    setMetadata(newMetadata)
   }
 
   return (
-    <MetadataContext.Provider value={{ metadata, updateMetadata }}>
+    <MetadataContext.Provider
+      value={{ metadata, updateMetadata, wipeMetadata }}
+    >
       {children}
     </MetadataContext.Provider>
   )

@@ -13,7 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { MetadataFormSchema, metadataFrontendSchema } from "./metadataSchema"
 import { useState } from "react"
-import { useMetadataContext } from "@/lib/providers"
+import { MetadataState, useMetadataContext } from "@/lib/providers"
 import { useParams } from "next/navigation"
 import { Input } from "../ui/input"
 
@@ -32,7 +32,11 @@ export function MetadataForm({ path: passedinPath }: { path?: string }) {
 
   const onSubmit: SubmitHandler<MetadataFormSchema> = async (data) => {
     // Add an extra day in MS
-    const newMetadata = { [data.path]: data.date.toISOString() }
+    const newMetadata: MetadataState = {
+      path: data.path,
+      dateStamp: data.date.toISOString(),
+      status: null,
+    }
     updateMetadata(newMetadata)
     setFormResult(true)
   }
