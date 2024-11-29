@@ -6,7 +6,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { MetadataState } from "@/lib/providers"
-import { Pencil } from "lucide-react"
+import { CheckCircleIcon, Pencil } from "lucide-react"
 import React from "react"
 import { buttonVariants } from "../ui/button"
 import { MetadataForm } from "./MetadataForm"
@@ -25,8 +25,11 @@ export function ApplyImage({
     <Popover key={path}>
       <div className="relative flex flex-col gap-2 rounded-md border border-gray-300">
         {status && (
-          <div className="absolute flex size-full flex-col items-center justify-center bg-gray-100 opacity-70">
+          <div className="absolute flex size-full flex-col items-center justify-center bg-gray-100/70">
             {status === "uploading" && <LoadingSpinner />}
+            {status === "success" && (
+              <CheckCircleIcon className="size-20 text-green-400" />
+            )}
           </div>
         )}
         <div className="p-4">

@@ -69,7 +69,7 @@ async function createTempFiles() {
               })
               .toFile(inTmpDirPath)
           })
-          .catch((err) => console.error("sharp error:", err))
+          .catch((err) => console.error("sharp error:", err, elementPath))
 
         fileProcessingPromises.push(processingPromise)
       }

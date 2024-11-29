@@ -9,7 +9,7 @@ import { ApplyImage } from "./ApplyImage"
 export function ApplyDisplay({ workingDir }: { workingDir: string }) {
   const [confirm, setConfirm] = useState(false)
   const router = useRouter()
-  const { metadata, wipeMetadata } = useMetadataContext()
+  const { metadata, updateMetadata, wipeMetadata } = useMetadataContext()
 
   if (metadata.length <= 0) {
     return (
@@ -24,11 +24,34 @@ export function ApplyDisplay({ workingDir }: { workingDir: string }) {
     )
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const submittingMetadata: MetadataState[] = metadata.map((pic) => {
       return { ...pic, status: "uploading" }
     })
     wipeMetadata(submittingMetadata)
+
+    for (const metadata of submittingMetadata) {
+      console.log("PATCH URL: ", `/api/${submittingMetadata[0].path}`)
+      console.log(metadata.dateStamp)
+      //TODO: write backend func
+      try {
+        await fetch(`/api/${metadata.path}`, {
+          method: "PATCH",
+          body: metadata.dateStamp,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        const successfulMetadata = { ...metadata }
+        successfulMetadata.status = "success"
+        updateMetadata(successfulMetadata)
+      } catch (error) {
+        metadata.status = "error"
+        console.error("Error updating metadata: ", error)
+      }
+    }
+    // Fire off a fetch PATCH for each item in metadata
+    // How do I do that in a way where I can update the individual items in the state?
   }
 
   return (
