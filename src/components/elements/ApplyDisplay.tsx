@@ -11,7 +11,9 @@ export function ApplyDisplay({ workingDir }: { workingDir: string }) {
   const router = useRouter()
   const { metadata, updateMetadata, wipeMetadata } = useMetadataContext()
 
-  if (metadata.length <= 0) {
+  const metadataArr = Object.entries(metadata)
+
+  if (metadataArr.length <= 0) {
     return (
       <div className="text-center">
         <p className="mb-2 text-lg font-semibold">
@@ -25,43 +27,50 @@ export function ApplyDisplay({ workingDir }: { workingDir: string }) {
   }
 
   const handleSubmit = async () => {
-    const submittingMetadata: MetadataState[] = metadata.map((pic) => {
-      return { ...pic, status: "uploading" }
-    })
+    const submittingMetadata: MetadataState = {}
+    for (const metadata of metadataArr) {
+      submittingMetadata[metadata[0]] = {
+        dateStamp: metadata[1].dateStamp,
+        status: "uploading",
+      }
+    }
+
     wipeMetadata(submittingMetadata)
 
-    for (const metadata of submittingMetadata) {
-      console.log("PATCH URL: ", `/api/${submittingMetadata[0].path}`)
-      console.log(metadata.dateStamp)
-      //TODO: write backend func
+    const submittingArr = Object.entries(submittingMetadata)
+    for (const metadata of submittingArr) {
+      const path = metadata[0]
+      const patchUrl = `/api/${path}`
+      //   //TODO: write backend func
       try {
-        await fetch(`/api/${metadata.path}`, {
+        await fetch(patchUrl, {
           method: "PATCH",
-          body: metadata.dateStamp,
+          body: metadata[1].dateStamp,
           headers: {
             "Content-Type": "application/json",
           },
         })
-        const successfulMetadata = { ...metadata }
-        successfulMetadata.status = "success"
-        updateMetadata(successfulMetadata)
+        const successfulMetadata: MetadataState[typeof path] = {
+          dateStamp: metadata[1].dateStamp,
+          status: "success",
+        }
+        updateMetadata(path, successfulMetadata)
       } catch (error) {
-        metadata.status = "error"
         console.error("Error updating metadata: ", error)
       }
     }
-    // Fire off a fetch PATCH for each item in metadata
-    // How do I do that in a way where I can update the individual items in the state?
+    // // Fire off a fetch PATCH for each item in metadata
+    // // How do I do that in a way where I can update the individual items in the state?
   }
 
   return (
     <div>
       <div className="grid grid-cols-4 p-6">
-        {metadata.map((metadataObj) => (
-          <React.Fragment key={metadataObj.path}>
+        {metadataArr.map(([path, metadataObj]) => (
+          <React.Fragment key={path}>
             <ApplyImage
-              path={metadataObj.path}
-              imageName={metadataObj.path}
+              path={path}
+              imageName={path}
               workingDir={workingDir}
               dateStamp={metadataObj.dateStamp}
               status={metadataObj.status}

@@ -2,16 +2,21 @@
 
 import { createContext, useContext, useState } from "react"
 
-export type MetadataState = {
-  path: string
-  dateStamp: string
-  status: "uploading" | "success" | "error" | null
-}
+export type MetadataState = Record<
+  string,
+  {
+    dateStamp: string
+    status: "uploading" | "success" | "error" | null
+  }
+>
 
 type MetadataContext = {
-  metadata: MetadataState[]
-  updateMetadata: (newMetadata: MetadataState) => void
-  wipeMetadata: (newMetadata: MetadataState[]) => void
+  metadata: MetadataState
+  updateMetadata: (
+    path: string,
+    newMetadata: MetadataState[typeof path],
+  ) => void
+  wipeMetadata: (newMetadata: MetadataState) => void
 }
 
 const MetadataContext = createContext<MetadataContext | undefined>(undefined)
@@ -21,19 +26,23 @@ export const MetadataProvider = ({
 }: {
   children: React.ReactNode
 }) => {
-  const [metadata, setMetadata] = useState<MetadataState[]>([])
+  const [metadata, setMetadata] = useState<MetadataState>({})
 
-  const updateMetadata = (newMetadata: MetadataState) => {
+  const updateMetadata = (
+    path: string,
+    newMetadata: MetadataState[typeof path],
+  ) => {
     setMetadata((prev) => {
-      const noFormerImage = prev.filter(
-        (image) => image.path !== newMetadata.path,
-      )
-      return [...noFormerImage, newMetadata]
+      // Key already exists
+      return {
+        ...prev,
+        [path]: newMetadata,
+      }
     })
     // TODO: update local storage here
   }
 
-  const wipeMetadata = (newMetadata: MetadataState[]) => {
+  const wipeMetadata = (newMetadata: MetadataState) => {
     setMetadata(newMetadata)
   }
 
