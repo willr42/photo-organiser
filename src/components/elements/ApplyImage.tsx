@@ -5,13 +5,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { MetadataItem } from "@/lib/providers"
 import { CheckCircleIcon, Pencil } from "lucide-react"
 import React from "react"
 import { buttonVariants } from "../ui/button"
 import { MetadataForm } from "./MetadataForm"
+import { MetadataItem } from "@/lib/providers"
 
-type ApplyImageProps = MetadataItem & { workingDir: string; imageName: string }
+type ApplyImageProps = MetadataItem & {
+  path: string
+  workingDir: string
+  imageName: string
+}
 
 export function ApplyImage({
   path,

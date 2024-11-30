@@ -10,12 +10,11 @@ export type MetadataState = Record<
   }
 >
 
+export type MetadataItem = MetadataState[string]
+
 type MetadataContext = {
   metadata: MetadataState
-  updateMetadata: (
-    path: string,
-    newMetadata: MetadataState[typeof path],
-  ) => void
+  updateMetadata: (path: string, newMetadata: MetadataItem) => void
   wipeMetadata: (newMetadata: MetadataState) => void
 }
 
@@ -28,10 +27,7 @@ export const MetadataProvider = ({
 }) => {
   const [metadata, setMetadata] = useState<MetadataState>({})
 
-  const updateMetadata = (
-    path: string,
-    newMetadata: MetadataState[typeof path],
-  ) => {
+  const updateMetadata = (path: string, newMetadata: MetadataItem) => {
     setMetadata((prev) => {
       // Key already exists
       return {
