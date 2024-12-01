@@ -1,6 +1,10 @@
 "use client"
 
-import { MetadataState, useMetadataContext } from "@/lib/providers"
+import {
+  MetadataItem,
+  MetadataState,
+  useMetadataContext,
+} from "@/lib/providers"
 import { useRouter } from "next/navigation"
 import React, { useState } from "react"
 import { Button } from "../ui/button"
@@ -50,7 +54,7 @@ export function ApplyDisplay({ workingDir }: { workingDir: string }) {
             "Content-Type": "application/json",
           },
         })
-        const successfulMetadata: MetadataState[typeof path] = {
+        const successfulMetadata: MetadataItem = {
           dateStamp: metadata[1].dateStamp,
           status: "success",
         }
