@@ -1,6 +1,7 @@
 import path from "node:path"
 import fs from "node:fs/promises"
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
+import { z } from "zod"
 
 export async function GET(
   request: Request,
@@ -20,6 +21,20 @@ export async function GET(
     return new NextResponse(fileContent, {
       headers: { "Content-Type": "image/jpeg" },
     })
+  } catch (err) {
+    console.error(err)
+    return new Response(null, { status: 500 })
+  }
+}
+
+const updateSchema = z.object({ date: z.string(), filepath: z.string() })
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const jsonBody = await request.json()
+    const parsedBody = updateSchema.parse(jsonBody)
+    // TODO: apply this to the file
+    return new Response(null, { status: 204 })
   } catch (err) {
     console.error(err)
     return new Response(null, { status: 500 })

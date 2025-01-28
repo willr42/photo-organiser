@@ -30,10 +30,8 @@ export const MetadataProvider = ({
   const updateMetadata = (path: string, newMetadata: MetadataItem) => {
     setMetadata((prev) => {
       // Key already exists
-      return {
-        ...prev,
-        [path]: newMetadata,
-      }
+      const updatedMetadata = { ...prev, [path]: newMetadata }
+      return updatedMetadata
     })
     // TODO: update local storage here
   }

@@ -49,7 +49,7 @@ export function ApplyDisplay({ workingDir }: { workingDir: string }) {
       try {
         await fetch(patchUrl, {
           method: "PATCH",
-          body: metadata[1].dateStamp,
+          body: JSON.stringify({ date: metadata[1].dateStamp, filepath: path }),
           headers: {
             "Content-Type": "application/json",
           },
@@ -61,6 +61,7 @@ export function ApplyDisplay({ workingDir }: { workingDir: string }) {
         updateMetadata(path, successfulMetadata)
       } catch (error) {
         console.error("Error updating metadata: ", error)
+        // Is there a way to only retry the ones that failed?
       }
     }
     // // Fire off a fetch PATCH for each item in metadata

@@ -60,7 +60,6 @@ export default async function Home() {
 
   return (
     <main>
-      <div>Files written to {WORKING_DIR_PATH}</div>
       <div className="my-10 flex flex-col items-center">
         <h1 className="mb-4 text-lg font-bold">Pick a file or folder</h1>
         <div className="flex">
