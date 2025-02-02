@@ -47,7 +47,7 @@ export async function PATCH(request: NextRequest) {
         {
           DateTimeOriginal: datestampExif,
         },
-        ["-overwrite_original_in_place", "-P"],
+        { writeArgs: ["-overwrite_original_in_place", "-P"] },
       )
       console.log("EXIF data written successfully")
     } catch (error) {
@@ -58,8 +58,6 @@ export async function PATCH(request: NextRequest) {
   } catch (err) {
     console.error(err)
     return new Response(null, { status: 500 })
-  } finally {
-    exiftool.end()
   }
 }
 
