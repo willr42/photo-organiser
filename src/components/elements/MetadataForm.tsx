@@ -26,8 +26,14 @@ export function MetadataForm({ path: passedinPath }: { path?: string }) {
 
   const { slug } = useParams()
   let path = ""
+
+  if (!slug) return <></>
+
   if (slug && Array.isArray(slug)) {
-    path = "/" + slug.join("/")
+    const unencodedSlug = slug.map((segment) => decodeURIComponent(segment))
+    path = "/" + unencodedSlug.join("/")
+  } else {
+    path = "/" + decodeURIComponent(slug)
   }
 
   const onSubmit: SubmitHandler<MetadataFormSchema> = async (data) => {
