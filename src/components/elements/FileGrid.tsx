@@ -9,8 +9,11 @@ export function FileGrid({ contents }: { contents: Dirent[] }) {
   const contentsNoDupes = contents
     .map((dirent) => {
       if (!dirent.isFile()) return dirent
+      const pathNoExt = path
+        .basename(dirent.name)
+        .replace(path.extname(dirent.name), "")
       const isSupplemental =
-        dirent.name.endsWith("_a") || dirent.name.endsWith("_b")
+        pathNoExt.endsWith("_a") || pathNoExt.endsWith("_b")
       if (isSupplemental) return undefined
       return dirent
     })

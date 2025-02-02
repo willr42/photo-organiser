@@ -45,7 +45,7 @@ async function createTempFiles() {
         // Make relative to root dir
         const relativeFromRootPath = path.join(
           elementPath.dir.replace(path.format(photosRootParsedPath), ""),
-          elementPath.name,
+          elementPath.base,
         )
         const inTmpDirPath = path.join(WORKING_DIR_PATH, relativeFromRootPath)
 
