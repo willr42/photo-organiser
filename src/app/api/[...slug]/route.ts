@@ -1,6 +1,8 @@
-import path from "node:path"
-import fs from "node:fs/promises"
+import { isoToExif } from "@/lib/utils"
+import { exiftool } from "exiftool-vendored"
 import { NextRequest, NextResponse } from "next/server"
+import fs from "node:fs/promises"
+import path from "node:path"
 import { z } from "zod"
 
 export async function GET(
@@ -33,11 +35,31 @@ export async function PATCH(request: NextRequest) {
   try {
     const jsonBody = await request.json()
     const parsedBody = updateSchema.parse(jsonBody)
-    // TODO: apply this to the file
+    const { filepath: targetFilepath, date: newDatestamp } = parsedBody
+
+    // assert: does not run without this defined
+    const resolvedPath = path.join(process.env.PHOTOS_ROOT_DIR!, targetFilepath)
+    const datestampExif = isoToExif(newDatestamp)
+
+    try {
+      await exiftool.write(
+        resolvedPath,
+        {
+          DateTimeOriginal: datestampExif,
+        },
+        ["-overwrite_original_in_place", "-P"],
+      )
+      console.log("EXIF data written successfully")
+    } catch (error) {
+      console.error("Error writing EXIF data:", error)
+    }
+
     return new Response(null, { status: 204 })
   } catch (err) {
     console.error(err)
     return new Response(null, { status: 500 })
+  } finally {
+    exiftool.end()
   }
 }
 
