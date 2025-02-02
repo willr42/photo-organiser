@@ -10,10 +10,12 @@ export default async function Page({
   params: Promise<{ slug: string[] }>
 }) {
   const { slug } = await params
-  const photoFrontPath = path.join(WORKING_DIR_PATH, ...slug)
+  const decodedSlug = slug.map((segment) => decodeURIComponent(segment))
+  const photoFrontPath = path.join(WORKING_DIR_PATH, ...decodedSlug)
   const photoBackPath = photoFrontPath + "_b"
 
   const DisplayElement = async () => {
+    console.log(photoFrontPath)
     const stats = await fs.stat(photoFrontPath)
     const isFile = stats.isFile()
 
