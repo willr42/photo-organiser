@@ -29,6 +29,12 @@ export const MetadataProvider = ({
 
   const updateMetadata = (path: string, newMetadata: MetadataItem) => {
     setMetadata((prev) => {
+      // If successfully uploaded, remove
+      if (newMetadata.status === "success") {
+        const updatedMetadata = { ...prev }
+        delete updatedMetadata[path]
+        return updatedMetadata
+      }
       // Key already exists
       const updatedMetadata = { ...prev, [path]: newMetadata }
       return updatedMetadata
