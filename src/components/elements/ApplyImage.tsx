@@ -5,7 +5,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { CheckCircleIcon, Pencil } from "lucide-react"
+import { CheckCircleIcon, CircleXIcon, Pencil } from "lucide-react"
 import React from "react"
 import { buttonVariants } from "../ui/button"
 import { MetadataForm } from "./MetadataForm"
@@ -24,7 +24,8 @@ export function ApplyImage({
   imageName,
   status,
 }: ApplyImageProps) {
-  const takenTimestamp = new Date(dateStamp).toDateString()
+  const correctedTimestamp = new Date(dateStamp).getTime() - 86400000
+  const takenTimestamp = new Date(correctedTimestamp).toDateString()
   return (
     <Popover key={path}>
       <div className="relative flex flex-col gap-2 rounded-md border border-gray-300">
@@ -33,6 +34,9 @@ export function ApplyImage({
             {status === "uploading" && <LoadingSpinner />}
             {status === "success" && (
               <CheckCircleIcon className="size-20 text-green-400" />
+            )}
+            {status === "error" && (
+              <CircleXIcon className="size-20 text-red-700" />
             )}
           </div>
         )}
