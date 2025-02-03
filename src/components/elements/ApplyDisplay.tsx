@@ -45,7 +45,6 @@ export function ApplyDisplay({ workingDir }: { workingDir: string }) {
     for (const metadata of submittingArr) {
       const path = metadata[0]
       const patchUrl = `/api/${path}`
-      //   //TODO: write backend func
       try {
         await fetch(patchUrl, {
           method: "PATCH",
@@ -61,11 +60,14 @@ export function ApplyDisplay({ workingDir }: { workingDir: string }) {
         updateMetadata(path, successfulMetadata)
       } catch (error) {
         console.error("Error updating metadata: ", error)
-        // Is there a way to only retry the ones that failed?
+        const failedMetadata: MetadataItem = {
+          status: "error",
+          dateStamp: metadata[1].dateStamp,
+        }
+
+        updateMetadata(path, failedMetadata)
       }
     }
-    // // Fire off a fetch PATCH for each item in metadata
-    // // How do I do that in a way where I can update the individual items in the state?
   }
 
   return (
