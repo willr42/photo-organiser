@@ -38,8 +38,10 @@ export function MetadataForm({ path: passedinPath }: { path?: string }) {
 
   const onSubmit: SubmitHandler<MetadataFormSchema> = async (data) => {
     // Add an extra day in MS
+    const correctedDate = new Date(data.date.getTime() + 86400000)
+
     const newMetadata: MetadataItem = {
-      dateStamp: data.date.toISOString(),
+      dateStamp: correctedDate.toISOString(),
       status: null,
     }
     updateMetadata(data.path, newMetadata)
